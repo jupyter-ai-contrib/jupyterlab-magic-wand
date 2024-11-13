@@ -1,0 +1,35 @@
+{
+  "jupyter.lab.shortcuts": [],
+  "title": "jupyterlab_magic_wand",
+  "description": "jupyterlab_magic_wand settings.",
+  "type": "object",
+  "properties": {
+    "timeout": {
+      "title": "Magic Button Timeout (in seconds)",
+      "type": "number",
+      "default": 360
+    }
+  },
+  "additionalProperties": false,
+  "jupyter.lab.toolbars": {
+    "Cell": [
+      {
+        "name": "improve-cell",
+        "command": "jupyterlab-magic-wand:improve-cell",
+        "rank": 0
+      },
+      {
+        "name": "undo",
+        "command": "notebook:undo",
+        "icon": "ui-components:undo",
+        "rank": 0.1
+      },
+      {
+        "name": "redo",
+        "command": "notebook:redo",
+        "icon": "ui-components:redo",
+        "rank": 0.2
+      }
+    ]
+  }
+}

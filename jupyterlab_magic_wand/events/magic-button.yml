@@ -1,0 +1,35 @@
+"$id": https://events.jupyter.org/jupyter_ai/magic_button/v1
+version: 1
+title: Jupyter AI Response
+personal-data: true
+description: |
+  A Jupyter AI Response event
+type: object
+required:
+  - agent
+  - input
+  - context
+  - commands
+properties:
+  agent:
+    type: string
+  input: 
+    type: string
+  context:
+    type: object
+  messages:
+    type: array
+    items:
+      type: string
+  commands: 
+    type: array
+    items:
+      type: object
+      required:
+        - name
+      properties:
+        name: 
+          type: string
+        args:
+          type: object
+        

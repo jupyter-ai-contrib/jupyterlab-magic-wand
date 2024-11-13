@@ -1,0 +1,27 @@
+"$id": https://events.jupyter.org/jupyter_ai/error/v1
+version: 1
+title: Jupyter AI Error
+personal-data: true
+description: |
+  A Jupyter AI Error event
+type: object
+required:
+  - type
+  - id
+  - time
+  - reply_to
+  - error_type
+  - message
+properties:
+  type:
+    type: string
+  id: 
+    type: string
+  time:
+    type: number
+  reply_to: 
+    type: string
+  error_type:
+    type: string
+  message:
+    type: string
