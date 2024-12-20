@@ -158,7 +158,7 @@ const plugin: JupyterFrontEndPlugin<IAICellTracker> = {
       `Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:tracker`
     );
     await app.serviceManager.ready;
-    let aiCellTracker = new AICellTracker(
+    const aiCellTracker = new AICellTracker(
       app.commands,
       notebookTracker,
       eventListener,

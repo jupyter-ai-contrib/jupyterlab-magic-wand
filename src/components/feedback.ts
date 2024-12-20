@@ -5,7 +5,7 @@ import {
 } from '@jupyterlab/apputils';
 import { Widget } from '@lumino/widgets';
 
-interface TextArea extends HTMLElement {
+interface ITextArea extends HTMLElement {
   value: string;
 }
 
@@ -14,11 +14,11 @@ Please share if something went wrong in this particular cell. Your feedback is a
 `;
 
 class TextAreaWidget extends Widget {
-  private _textArea: TextArea;
+  private _textArea: ITextArea;
 
   constructor() {
     super();
-    let paragraph = document.createElement('p');
+    const paragraph = document.createElement('p');
     paragraph.className = 'jp-AI-Feedback-paragraph';
     paragraph.innerText = DESCRIPTION;
     this._textArea = document.createElement('textarea');
@@ -36,15 +36,15 @@ class TextAreaWidget extends Widget {
 
 class FeedbackDialog extends Dialog<void> {
   handleEvent(event: KeyboardEvent) {
-    if (event.key == 'Enter') {
+    if (event.key === 'Enter') {
       return;
     }
     super.handleEvent(event);
   }
 }
 
-export let requestFeedback = function () {
-  let dialog = new FeedbackDialog({
+export const requestFeedback = function () {
+  const dialog = new FeedbackDialog({
     title: 'AI Assistant Feedback',
     body: new TextAreaWidget(),
     buttons: [

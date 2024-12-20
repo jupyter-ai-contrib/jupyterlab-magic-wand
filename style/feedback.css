@@ -1,5 +1,5 @@
 .jp-AI-Feedback-paragraph {
-  margin-top: 0px;
+  margin-top: 0;
   max-width: 400px;
 }
 
@@ -20,7 +20,7 @@
 
 .jp-AI-Feedback-TextArea:active,
 .jp-AI-Feedback-TextArea:focus {
-  outline: 0px !important;
+  outline: 0 !important;
   -webkit-appearance: none;
   box-shadow: none !important;
 }

@@ -45,15 +45,15 @@ export type CellContext = {
 };
 
 export function getCellData(cell: Cell): CellData {
-  let source = cell?.model.sharedModel.getSource();
+  const source = cell?.model.sharedModel.getSource();
   cell?.model.selections;
   let error: null | string = null;
-  if (cell?.model.type == 'code') {
-    let codeCell = cell as CodeCell;
-    let lastIndex = codeCell.outputArea.model.length - 1;
-    let lastOutput = codeCell.outputArea.model.get(lastIndex);
-    if (lastOutput && lastOutput.type == 'error') {
-      let err = lastOutput.data['application/vnd.jupyter.error'] as any;
+  if (cell?.model.type === 'code') {
+    const codeCell = cell as CodeCell;
+    const lastIndex = codeCell.outputArea.model.length - 1;
+    const lastOutput = codeCell.outputArea.model.get(lastIndex);
+    if (lastOutput && lastOutput.type === 'error') {
+      const err = lastOutput.data['application/vnd.jupyter.error'] as any;
       if (err) {
         error = err['ename'] + ': ' + err['evalue'];
       }
@@ -69,9 +69,9 @@ export function getCellData(cell: Cell): CellData {
 }
 
 function cellFromIndex(notebook: Notebook, idx: number): Cell | undefined {
-  let cellId = notebook.model?.cells.get(idx)?.id;
+  const cellId = notebook.model?.cells.get(idx)?.id;
   if (cellId) {
-    let cell = notebook._findCellById(cellId)?.cell;
+    const cell = notebook._findCellById(cellId)?.cell;
     if (cell) {
       return cell;
     }
@@ -122,8 +122,9 @@ export function findCell(
   notebookTracker: INotebookTracker
 ): ActiveNotebookCell {
   // First, try the current notebook in focuse
-  let currentNotebook = notebookTracker.currentWidget;
-  let cell = notebookTracker.currentWidget?.content._findCellById(cellId)?.cell;
+  const currentNotebook = notebookTracker.currentWidget;
+  const cell =
+    notebookTracker.currentWidget?.content._findCellById(cellId)?.cell;
   if (currentNotebook && cell) {
     return {
       cell: cell,
@@ -132,8 +133,8 @@ export function findCell(
   }
 
   // Otherwise iterate through notebooks to find the cell.
-  let notebookMatch = notebookTracker.find(notebook => {
-    let cell = notebook.content._findCellById(cellId)?.cell;
+  const notebookMatch = notebookTracker.find(notebook => {
+    const cell = notebook.content._findCellById(cellId)?.cell;
     if (cell) {
       return true;
     }

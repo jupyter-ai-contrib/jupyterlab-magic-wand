@@ -97,11 +97,11 @@ export class AICellTracker implements IAICellTracker {
     this._eventListener.addListener(
       AI_ERROR_EVENT_SCHEMA_ID,
       async (manager, schemaId, event: Event.Emission) => {
-        let data = event as any as ERROR_EVENT;
+        const data = event as any as ERROR_EVENT;
         this.pendingCells.delete(data.reply_to);
         this._commandRegistry.notifyCommandChanged(this.commandId);
 
-        let { cell } = this.findCell(data.reply_to);
+        const { cell } = this.findCell(data.reply_to);
         cell?.model.setMetadata('editable', true);
         cell?.saveEditableState();
 
@@ -143,22 +143,22 @@ export class AICellTracker implements IAICellTracker {
    * @param event
    */
   async response(event: Event.Emission) {
-    let data = event as any as AIWorkflowState;
+    const data = event as any as AIWorkflowState;
 
-    let cellId = data.context['cell_id'];
+    const cellId = data.context['cell_id'];
 
     if (cellId) {
-      let pending = this.pendingCells.get(cellId);
+      const pending = this.pendingCells.get(cellId);
       if (pending) {
         clearTimeout(pending);
       }
-      let { cell } = this.findCell(cellId);
+      const { cell } = this.findCell(cellId);
       cell?.model.setMetadata('editable', true);
       cell?.saveEditableState();
       // Remove pending item from cell map
       this.pendingCells.delete(cellId);
-      let metadata = cell?.model.getMetadata('jupyter_ai');
-      let newMetadata = {
+      const metadata = cell?.model.getMetadata('jupyter_ai');
+      const newMetadata = {
         ...metadata,
         agent: data.agent,
         messages: data.messages
@@ -200,7 +200,7 @@ export class AICellTracker implements IAICellTracker {
   label(): string {
     console.log('SEEN label??');
 
-    let cellId = this.getCurrentActiveCellId();
+    const cellId = this.getCurrentActiveCellId();
     if (cellId && cellId in this.pendingCells) {
       return 'AI is thinking...';
     }
@@ -216,7 +216,7 @@ export class AICellTracker implements IAICellTracker {
    */
   icon(args: any): VirtualElement.IRenderer | undefined {
     console.log('SEEN icon??');
-    let cellId = this.getCurrentActiveCellId();
+    const cellId = this.getCurrentActiveCellId();
     if (cellId && this.pendingCells.get(cellId)) {
       return spinnerIcon;
     }
@@ -232,7 +232,7 @@ export class AICellTracker implements IAICellTracker {
   isEnabled(): boolean {
     console.log('SEEN enabled??');
 
-    let cellId = this.getCurrentActiveCellId();
+    const cellId = this.getCurrentActiveCellId();
     if (cellId && this.pendingCells.get(cellId)) {
       return false;
     }
@@ -258,9 +258,9 @@ export class AICellTracker implements IAICellTracker {
   getCurrentActiveCellId(): string | null | undefined {
     console.log('getCurrentActiveCellId');
 
-    let notebook = this._notebookTracker.currentWidget;
-    let idx = notebook?.content.activeCellIndex;
-    if (idx != undefined && notebook) {
+    const notebook = this._notebookTracker.currentWidget;
+    const idx = notebook?.content.activeCellIndex;
+    if (idx !== undefined && notebook) {
       return notebook.model?.cells.get(idx)?.id;
     }
   }
@@ -279,8 +279,8 @@ export class AICellTracker implements IAICellTracker {
    */
   findCell(cellId: string): ActiveNotebookCell {
     // First, try the current notebook in focuse
-    let currentNotebook = this._notebookTracker.currentWidget;
-    let cell =
+    const currentNotebook = this._notebookTracker.currentWidget;
+    const cell =
       this._notebookTracker.currentWidget?.content._findCellById(cellId)?.cell;
     if (currentNotebook && cell) {
       return {
@@ -289,8 +289,8 @@ export class AICellTracker implements IAICellTracker {
       };
     }
     // Otherwise iterate through notebooks to find the cell.
-    let notebookMatch = this._notebookTracker.find(notebook => {
-      let cell = notebook.content._findCellById(cellId)?.cell;
+    const notebookMatch = this._notebookTracker.find(notebook => {
+      const cell = notebook.content._findCellById(cellId)?.cell;
       if (cell) {
         return true;
       }
@@ -308,9 +308,9 @@ export class AICellTracker implements IAICellTracker {
    * @returns
    */
   async execute() {
-    let currentNotebook = this._notebookTracker.currentWidget;
-    let cellContext = getActiveCellContext(currentNotebook);
-    let cell = this.getCurrentActiveCell();
+    const currentNotebook = this._notebookTracker.currentWidget;
+    const cellContext = getActiveCellContext(currentNotebook);
+    const cell = this.getCurrentActiveCell();
 
     // Temporarily block the cell from being edited.
     cell?.model.setMetadata('editable', false);
@@ -321,9 +321,9 @@ export class AICellTracker implements IAICellTracker {
       return;
     }
 
-    let cellId = cellContext.current.cell_id;
+    const cellId = cellContext.current.cell_id;
 
-    let timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       console.log('AI request timed out.');
       this.pendingCells.delete(cellId);
       this._commandRegistry.notifyCommandChanged(this.commandId);
@@ -348,7 +348,7 @@ export class AICellTracker implements IAICellTracker {
 
     this.pendingCells.set(cellId, timeoutId);
 
-    let codeInput = cell?.model?.sharedModel.getSource();
+    const codeInput = cell?.model?.sharedModel.getSource();
 
     // Make the request.
     requestAPI('/api/ai/magic', {
