@@ -5,13 +5,13 @@ import {
 
 import { ISettingRegistry } from '@jupyterlab/settingregistry';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { 
-  AICellTracker, 
-  IAICellTracker, 
-  // responseHandledData 
-} from './celltracker'; 
+import {
+  AICellTracker,
+  IAICellTracker
+  // responseHandledData
+} from './celltracker';
 
-// import { 
+// import {
 //   findCell,
 // } from './utils';
 
@@ -19,8 +19,7 @@ import {
 import { IEventListener } from 'jupyterlab-eventlistener';
 import { ICellFooterTracker } from 'jupyterlab-cell-input-footer';
 
-const PLUGIN_ID = "jupyterlab_magic_wand";
-
+const PLUGIN_ID = 'jupyterlab_magic_wand';
 
 // const agentCommands: JupyterFrontEndPlugin<void> = {
 //   id: PLUGIN_ID + ":agentCommands",
@@ -28,12 +27,12 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
 //   autoStart: true,
 //   requires: [INotebookTracker],
 //   activate: async (
-//     app: JupyterFrontEnd, 
+//     app: JupyterFrontEnd,
 //     notebookTracker: INotebookTracker,
 //   ) => {
 //     console.log(`Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:agentCommands`);
 //     app.commands.addCommand(
-//       'insert-cell-below', 
+//       'insert-cell-below',
 //       {
 //         execute: (args) => {
 //           let data = (args as any);
@@ -42,8 +41,8 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
 //           let cellType = data["cell_type"]
 //           if (cellId) {
 //             let { notebook } = findCell(cellId, notebookTracker);
-//             let idx = notebook?.model?.sharedModel.cells.findIndex((cell) => { 
-//               return cell.getId() == cellId 
+//             let idx = notebook?.model?.sharedModel.cells.findIndex((cell) => {
+//               return cell.getId() == cellId
 //             })
 //             if (idx !== undefined && idx >= 0) {
 //               let newCell = notebook?.model?.sharedModel.insertCell(
@@ -56,7 +55,7 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
 //                 // Add the source to the new cell;
 //                 newCell?.setSource(data["source"]);
 //                 // Post an update to ensure that notebook gets rerendered.
-//                 notebook?.update();     
+//                 notebook?.update();
 //               }
 //             }
 //           }
@@ -64,14 +63,14 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
 //       }
 //     )
 //     app.commands.addCommand(
-//       'update-cell-source', 
+//       'update-cell-source',
 //       {
 //         execute: (args) => {
 //           let data = (args as any);
 //           let cellId = data["cell_id"];
 //           if (cellId) {
 //             let { notebook } = findCell(cellId, notebookTracker);
-//             let cell = notebook?.model?.sharedModel.cells.find((cell) => { 
+//             let cell = notebook?.model?.sharedModel.cells.find((cell) => {
 //               return cell.getId() == cellId
 //             })
 //             if (cell) {
@@ -88,7 +87,7 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
 //       }
 //     )
 //     app.commands.addCommand(
-//       'track-if-editted', 
+//       'track-if-editted',
 //       {
 //         execute: async (args) => {
 //           let data = (args as any);
@@ -100,11 +99,11 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
 
 //           let { cell, notebook } = findCell(cellId, notebookTracker);
 //           if (cell === undefined) {
-//             return;  
+//             return;
 //           }
 //           await cell.ready;
 
-//           let sharedCell = notebook?.model?.sharedModel.cells.find((cell) => { 
+//           let sharedCell = notebook?.model?.sharedModel.cells.find((cell) => {
 //             return cell.getId() == cellId
 //           })
 //           if (sharedCell === undefined) {
@@ -142,20 +141,22 @@ const PLUGIN_ID = "jupyterlab_magic_wand";
  * Initialization data for the jupyterlab-magic-wand extension.
  */
 const plugin: JupyterFrontEndPlugin<IAICellTracker> = {
-  id: PLUGIN_ID + ":plugin",
+  id: PLUGIN_ID + ':plugin',
   description: 'A cell tracker for the magic wand button.',
   autoStart: true,
   optional: [ISettingRegistry],
   requires: [INotebookTracker, IEventListener, ICellFooterTracker],
   provides: IAICellTracker,
   activate: async (
-    app: JupyterFrontEnd, 
+    app: JupyterFrontEnd,
     notebookTracker: INotebookTracker,
     eventListener: IEventListener,
     cellFooterTracker: ICellFooterTracker,
     settingRegistry: ISettingRegistry | null
   ) => {
-    console.log(`Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:tracker`);
+    console.log(
+      `Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:tracker`
+    );
     await app.serviceManager.ready;
     let aiCellTracker = new AICellTracker(
       app.commands,
@@ -163,7 +164,7 @@ const plugin: JupyterFrontEndPlugin<IAICellTracker> = {
       eventListener,
       cellFooterTracker
     );
-  
+
     // Add a keyboard shortcut.
     // app.commands.addKeyBinding({
     //   command: aiCellTracker.commandId,
@@ -187,14 +188,13 @@ const plugin: JupyterFrontEndPlugin<IAICellTracker> = {
   }
 };
 
-
 // const feedback: JupyterFrontEndPlugin<void> = {
 //   id: PLUGIN_ID + ":feedback",
 //   description: 'A plugin to request feedback from the user.',
 //   requires: [INotebookTracker, IAICellTracker],
 //   autoStart: true,
 //   activate: async (
-//     app: JupyterFrontEnd, 
+//     app: JupyterFrontEnd,
 //     notebookTracker: INotebookTracker,
 //     aiCellTracker: IAICellTracker,
 //     settingRegistry: ISettingRegistry | null,
@@ -203,7 +203,7 @@ const plugin: JupyterFrontEndPlugin<IAICellTracker> = {
 //     await app.serviceManager.ready;
 
 //     app.commands.addCommand(
-//       'request-feedback', 
+//       'request-feedback',
 //       {
 //         execute: executeFeedbackCommand(notebookTracker)
 //       }

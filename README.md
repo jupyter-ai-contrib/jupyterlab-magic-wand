@@ -3,7 +3,6 @@
 [![Github Actions Status](https://github.com/Zsailer/jupyterlab-magic-wand/workflows/Build/badge.svg)](https://github.com/Zsailer/jupyterlab-magic-wand/actions/workflows/build.yml)
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/Zsailer/jupyterlab-magic-wand/main?urlpath=lab)
 
-
 An in-cell AI assistant for JupyterLab notebooks
 
 This extension is composed of a Python package named `jupyterlab_magic_wand`

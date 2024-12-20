@@ -3,7 +3,7 @@
 // import {
 //   ToolbarButton,
 // } from '@jupyterlab/ui-components';
-// import { 
+// import {
 //   findCell,
 //   findMagicCellToolbar
 // } from './utils';
@@ -14,9 +14,9 @@
 // import { requestAPI } from './handler';
 // /**
 //  * Adds a diff to the Magic Toolbar
-//  * 
-//  * @param notebookTracker 
-//  * @param args 
+//  *
+//  * @param notebookTracker
+//  * @param args
 //  */
 // export function executeFeedbackCommand(cellFooterTracker: ICellFooterTracker) {
 //   return (args: any) => {
@@ -28,17 +28,17 @@
 //       if (cell === undefined) {
 //         return;
 //       }
-      
+
 //       cellFooterTracker.showFooter(cellId);
 //       // if (toolbarWidget?.isHidden) {
 //       //   toolbarWidget.show();
 //       //   toolbarWidget.update();
-//       // }   
+//       // }
 //       let toolbar = toolbarWidget?.toolbar;
 //       if (toolbar === undefined){
 //         return;
 //       }
-      
+
 //       let metadata: any = cell.model.getMetadata("jupyter_ai");
 
 //       let feedbackButton = new ToolbarButton({
@@ -64,13 +64,13 @@
 //           })
 //         }
 //       })
-  
+
 //       toolbar.insertAfter(
 //         'spacer',
 //         'feedback',
 //         feedbackButton
 //       )
-  
+
 //       toolbar.insertAfter(
 //         'spacer',
 //         'not-helpful',
@@ -92,7 +92,6 @@
 //         })
 //       )
 
-      
 //       toolbar.insertAfter(
 //         'spacer',
 //         'helpful',
@@ -116,14 +115,13 @@
 //       let textWidget = new Widget();
 //       textWidget.node.innerText = "Was this helpful?";
 //       textWidget.addClass("jp-cell-footer-toolbar-text");
-  
+
 //       toolbar.insertAfter(
 //         'spacer',
 //         'blank',
 //         textWidget
 //       )
-      
+
 //     }
 //   }
 // }
-  

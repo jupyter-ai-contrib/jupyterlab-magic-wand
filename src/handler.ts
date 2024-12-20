@@ -15,10 +15,7 @@ export async function requestAPI<T>(
 ): Promise<T> {
   // Make request to Jupyter API
   const settings = ServerConnection.makeSettings();
-  const requestUrl = URLExt.join(
-    settings.baseUrl,
-    endPoint
-  );
+  const requestUrl = URLExt.join(settings.baseUrl, endPoint);
 
   let response: Response;
   try {

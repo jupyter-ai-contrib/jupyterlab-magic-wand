@@ -35,18 +35,20 @@
   height: 100%;
 }
 
-.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-Toolbar-item{
+.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-Toolbar-item {
   border-radius: 0px;
 }
 
-.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-cell-footer-toolbar-text{
+.jp-ai-MagicToolbarWidget
+  .jp-ai-MagicFooterToolbar
+  .jp-cell-footer-toolbar-text {
   border-radius: 0px;
   font-size: x-small;
   color: var(--jp-ui-font-color2);
-  margin-right: 5px; 
+  margin-right: 5px;
 }
 
-.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-ToolbarButtonComponent{
+.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-ToolbarButtonComponent {
   margin: 0px;
   color: var(--jp-ui-font-color2);
   font-size: x-small;
@@ -54,7 +56,9 @@
   border-radius: 0px;
 }
 
-.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-ToolbarButtonComponent-label{
+.jp-ai-MagicToolbarWidget
+  .jp-ai-MagicFooterToolbar
+  .jp-ToolbarButtonComponent-label {
   line-height: 10px;
 }
 
@@ -88,16 +92,16 @@
 /* 
 Style the magic Icon in cell footer
 */
-.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-Toolbar-Icon{
+.jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-Toolbar-Icon {
   width: 21px;
-  height:21px;
+  height: 21px;
   line-height: 10px;
 }
 
 .jp-ai-MagicToolbarWidget .jp-ai-MagicFooterToolbar .jp-Toolbar-Icon > svg {
   width: 16px;
-  height:16px;  
-  margin: auto
+  height: 16px;
+  margin: auto;
 }
 
 .jp-ToolBar-react-widget {

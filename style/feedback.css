@@ -1,28 +1,26 @@
-
 .jp-AI-Feedback-paragraph {
-    margin-top: 0px;
-    max-width: 400px;
+  margin-top: 0px;
+  max-width: 400px;
 }
 
-.jp-AI-Feedback-TextArea{
-    width: 100%;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 6px;
-    margin-bottom: 10px;
-    min-height: 100px;
-    padding: 8px;
-    background-color: var(--jp-input-background);
-    font-size: var(--jp-ui-font-size1);
-    line-height: 1em;
-    color: var(--jp-ui-font-color0);
+.jp-AI-Feedback-TextArea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  min-height: 100px;
+  padding: 8px;
+  background-color: var(--jp-input-background);
+  font-size: var(--jp-ui-font-size1);
+  line-height: 1em;
+  color: var(--jp-ui-font-color0);
 }
 
-.jp-AI-Feedback-TextArea:active, 
+.jp-AI-Feedback-TextArea:active,
 .jp-AI-Feedback-TextArea:focus {
-    outline:0px !important;
-    -webkit-appearance:none;
-    box-shadow: none !important;
+  outline: 0px !important;
+  -webkit-appearance: none;
+  box-shadow: none !important;
 }
-

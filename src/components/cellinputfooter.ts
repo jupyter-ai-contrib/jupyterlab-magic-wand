@@ -1,6 +1,6 @@
-// import { 
-//   PanelLayout, 
-//   Panel, 
+// import {
+//   PanelLayout,
+//   Panel,
 //   Widget
 // } from '@lumino/widgets';
 // import { MergeView } from 'nbdime/lib/common/mergeview';
@@ -24,10 +24,10 @@
 //   mergeView: MergeView | undefined;
 
 //   constructor(
-//     // diff: StringDiffModel, 
+//     // diff: StringDiffModel,
 //     cell: Cell
 //   ) {
-//     super();    
+//     super();
 
 //     let layout = (cell?.layout as PanelLayout)
 
@@ -37,12 +37,12 @@
 //     if (oldWidget) {
 //       oldWidget.dispose();
 //     }
-    
-//     this.id = MAGIC_TOOLBAR_ID;
-//     this.addClass(MAGIC_TOOLBAR_ID); 
 
-//     // Appends the diff element after 
-//     // the node in the DOM with this class. 
+//     this.id = MAGIC_TOOLBAR_ID;
+//     this.addClass(MAGIC_TOOLBAR_ID);
+
+//     // Appends the diff element after
+//     // the node in the DOM with this class.
 //     // NOTE: is there a better way to do this?
 //     let predecessorClass = "jp-Cell-inputWrapper"
 //     let predecessorIndex = layout.widgets.findIndex((widget: Widget, index: number, obj: readonly Widget[]) => {
@@ -59,7 +59,6 @@
 //     this.toolbar = new Toolbar();
 //     this.toolbar.addClass("jp-ai-MagicFooterToolbar");
 
-
 //     let iconWidget = new Widget({node: wandIcon.element()});
 //     iconWidget.addClass('jp-Toolbar-Icon');
 
@@ -73,14 +72,13 @@
 //     this.toolbar.addItem(
 //       'clear',
 //       new ToolbarButton({
-//         icon: closeIcon, 
+//         icon: closeIcon,
 //         enabled: true,
-//         onClick: () => { 
+//         onClick: () => {
 //           that.dispose();
 //         }
 //       })
 //     )
-
 
 //     this.addWidget(this.toolbar);
 //   }
