@@ -44,6 +44,7 @@ class MagicHandler:
     # _: KW_ONLY
     event_logger: EventLogger = None
     config: ConfigManager = None
+    jupyter_ai_config: any = None
 
     def __post_init__(self):
         self.event_logger.register_event_schema(RESPONSE_SCHEMA_PATH)
@@ -55,10 +56,17 @@ class MagicHandler:
         agent = self.config.agents[agent_name]
         # Ensure these two values are in sync.
         request["agent"] = agent.name
-        try:
+        try:                
             c: ConfigSchema = {
-                "models": {}
+                "models": {},
             }
+            # NOTE: THIS IS A HACK FOR NOW to integrate with Jupyter AI.
+            # Allows you to use your Jupyter AI provider to do things.
+            try:
+                c["lm_provider"] = self.jupyter_ai_config.lm_provider
+            except:
+                pass
+            
             response: AIWorkflowState = await agent.workflow.ainvoke(request, config=c)
             self.event_logger.emit(
                 schema_id="https://events.jupyter.org/jupyter_ai/magic_button/v1",

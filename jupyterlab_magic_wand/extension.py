@@ -38,7 +38,8 @@ class AIMagicExtension(ExtensionApp):
         self.ai_config = ConfigManager(self.agents)
         self.magic_handler = MagicHandler(
             event_logger=self.serverapp.event_logger,
-            config=self.ai_config
+            config=self.ai_config,
+            jupyter_ai_config=self.settings["jai_config_manager"]
         )
         self.settings.update({
             "magic_handler": self.magic_handler,

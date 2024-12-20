@@ -1,23 +1,20 @@
 
 import { DocumentWidget } from '@jupyterlab/docregistry';
+
 import { 
   Notebook,
   NotebookPanel,
   INotebookTracker
 } from '@jupyterlab/notebook';
+
 import {
   Cell, 
   CodeCell
 } from '@jupyterlab/cells';
+
 import { 
-  PanelLayout, 
   Widget
 } from '@lumino/widgets';
-import { 
-  MAGIC_TOOLBAR_ID,
-  MagicToolbarWidget
-} from './components/cellinputfooter'
-
 
 
 export function getNotebook(widget: Widget | null): Notebook | null {
@@ -152,11 +149,4 @@ export function findCell(cellId: string, notebookTracker: INotebookTracker): Act
     cell: cell, 
     notebook: notebookMatch
   }
-}
-
-export function findMagicCellToolbar(cell: Cell): MagicToolbarWidget | undefined {
-  let layout = (cell?.layout as PanelLayout);
-  // Dispose any old widgets attached to this cell.
-  let oldWidget: Widget | undefined = layout.widgets.find((w) => w.id == MAGIC_TOOLBAR_ID);
-  return (oldWidget as MagicToolbarWidget)
 }

@@ -3,7 +3,7 @@ import { VirtualElement } from '@lumino/virtualdom';
 import { wandIcon, spinnerIcon } from './icon';
 import { CommandRegistry } from '@lumino/commands';
 import { INotebookTracker } from '@jupyterlab/notebook';
-import { IEventListener } from './token';
+import { IEventListener } from 'jupyterlab-eventlistener';
 import { Event } from '@jupyterlab/services';
 import { Signal, ISignal } from '@lumino/signaling';
 import { Cell } from '@jupyterlab/cells';
@@ -14,7 +14,7 @@ import {
 } from '@jupyterlab/apputils';
 import { timeoutDialog, errorDialog } from './components/errordialog';
 import { NotebookPanel } from '@jupyterlab/notebook';
-import { MagicToolbarWidget } from './components/cellinputfooter';
+import { ICellFooterTracker } from 'jupyterlab-cell-input-footer';
 
 
 export const IAICellTracker = new Token<IAICellTracker>('AICellTracker');
@@ -61,7 +61,7 @@ type ActiveNotebookCell = {
 const AI_EVENT_SCHEMA_ID = "https://events.jupyter.org/jupyter_ai/magic_button/v1"
 const AI_ERROR_EVENT_SCHEMA_ID = "https://events.jupyter.org/jupyter_ai/error/v1"
 
-const AI_COMMAND_ID = "jupyterlab-magic-wand:improve-cell"
+const AI_COMMAND_ID = "jupyterlab_magic_wand:improve-cell"
 const AI_QUERY_TIMEOUT = 1800000; // in milliseconds
 
 /**
@@ -77,15 +77,18 @@ export class AICellTracker implements IAICellTracker {
   _notebookTracker: INotebookTracker;
   _eventListener: IEventListener;
   _commandRegistry: CommandRegistry;
+  _cellFooterTracker: ICellFooterTracker
 
   constructor(
     commandRegistry: CommandRegistry,
     notebookTracker: INotebookTracker,
     eventListener: IEventListener,
+    cellFooterTracker: ICellFooterTracker
   ) {
     this._notebookTracker = notebookTracker;
     this._eventListener = eventListener;
     this._commandRegistry = commandRegistry;
+    this._cellFooterTracker = cellFooterTracker;
 
     // Add the response handler to the event system
     // which routes messages to the relevant cell.
@@ -125,17 +128,20 @@ export class AICellTracker implements IAICellTracker {
       }
     )
 
+
     // Register the command in JupyterLab.
     this._commandRegistry.addCommand(
       this.commandId,
       {
         label: (args) => this.label(),
-        icon: (args) => this.icon(args), 
+        icon: (args) => { 
+          console.log("seen?")
+          return this.icon(args)
+        } , 
         execute: (args) => this.execute(),
         isEnabled: (args) => this.isEnabled(),
       }
     )
-
     // Update anytime a response happens.
     this.responseHappened.connect(() => {
       this._commandRegistry.notifyCommandChanged(this.commandId);
@@ -172,9 +178,7 @@ export class AICellTracker implements IAICellTracker {
       }
       cell?.model.setMetadata("jupyter_ai", newMetadata);
       if (cell) {
-        let toolbar = new MagicToolbarWidget(cell);
-        toolbar.hide();
-        toolbar.update();
+        this._cellFooterTracker.showFooter(cellId);
       }
       this._responseHappened.emit({cell: cell, response: data});
     }
@@ -210,6 +214,8 @@ export class AICellTracker implements IAICellTracker {
    * @returns 
    */
   label(): string {
+    console.log("SEEN label??")
+
     let cellId = this.getCurrentActiveCellId();
     if (cellId && cellId in this.pendingCells) {
       return "AI is thinking..."
@@ -225,6 +231,7 @@ export class AICellTracker implements IAICellTracker {
    * @returns LabIcon
    */
   icon(args: any): VirtualElement.IRenderer | undefined { 
+    console.log("SEEN icon??")
     let cellId = this.getCurrentActiveCellId();
     if (cellId && this.pendingCells.get(cellId)) {
       return spinnerIcon;
@@ -239,6 +246,8 @@ export class AICellTracker implements IAICellTracker {
    * @returns `true` if no pending request is outstanding. 
    */
   isEnabled(): boolean {
+    console.log("SEEN enabled??")
+
     let cellId = this.getCurrentActiveCellId();
     if (cellId && this.pendingCells.get(cellId)) {
       return false
@@ -252,6 +261,8 @@ export class AICellTracker implements IAICellTracker {
    * @returns 
    */
   getCurrentActiveCell(): Cell | null | undefined {
+    console.log(this._notebookTracker.currentWidget?.content.activeCell)
+
     return this._notebookTracker.currentWidget?.content.activeCell;
   }
 
@@ -261,6 +272,8 @@ export class AICellTracker implements IAICellTracker {
    * @returns 
    */
   getCurrentActiveCellId(): string | null | undefined {
+    console.log("getCurrentActiveCellId")
+
     let notebook = this._notebookTracker.currentWidget
     let idx = notebook?.content.activeCellIndex;
     if (idx != undefined && notebook) {
