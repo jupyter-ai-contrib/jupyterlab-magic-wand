@@ -30,7 +30,9 @@ jobs:
       contents: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-
+      - name: Install typing_extension for Python 3.12
+        shell: bash
+        run: pip install typing_extensions
       - name: Prep Release
         id: prep-release
         uses: jupyter-server/jupyter_releaser/.github/actions/prep-release@v2

@@ -20,7 +20,9 @@ jobs:
       id-token: write
     steps:
       - uses: jupyterlab/maintainer-tools/.github/actions/base-setup@v1
-
+      - name: Install typing_extension for Python 3.12
+        shell: bash
+        run: pip install typing_extensions
       - uses: actions/create-github-app-token@v1
         id: app-token
         with:
