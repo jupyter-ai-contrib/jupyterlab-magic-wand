@@ -1,18 +1,21 @@
-import { Token } from '@lumino/coreutils';
-import { VirtualElement } from '@lumino/virtualdom';
-import { wandIcon, spinnerIcon } from './icon';
 import { CommandRegistry } from '@lumino/commands';
-import { INotebookTracker } from '@jupyterlab/notebook';
-import { IEventListener } from 'jupyterlab-eventlistener';
-import { Event } from '@jupyterlab/services';
+import { Token } from '@lumino/coreutils';
 import { Signal, ISignal } from '@lumino/signaling';
-import { Cell } from '@jupyterlab/cells';
-import { getActiveCellContext } from './utils';
-import { requestAPI } from './handler';
+import { Widget } from '@lumino/widgets';
+import { VirtualElement } from '@lumino/virtualdom';
+
 import { Notification } from '@jupyterlab/apputils';
-import { timeoutDialog, errorDialog } from './components/errordialog';
-import { NotebookPanel } from '@jupyterlab/notebook';
+import { Cell } from '@jupyterlab/cells';
+import { INotebookTracker, NotebookPanel } from '@jupyterlab/notebook';
+import { Event } from '@jupyterlab/services';
+
+import { IEventListener } from 'jupyterlab-eventlistener';
 import { ICellFooterTracker } from 'jupyterlab-cell-input-footer';
+
+import { requestAPI } from './handler';
+import { wandIcon, spinnerIcon } from './icon';
+import { getActiveCellContext } from './utils';
+import { timeoutDialog, errorDialog } from './components/errordialog';
 
 export const IAICellTracker = new Token<IAICellTracker>('AICellTracker');
 
@@ -124,7 +127,6 @@ export class AICellTracker implements IAICellTracker {
     this._commandRegistry.addCommand(this.commandId, {
       label: args => this.label(),
       icon: args => {
-        console.log('seen?');
         return this.icon(args);
       },
       execute: args => this.execute(),
@@ -165,6 +167,13 @@ export class AICellTracker implements IAICellTracker {
       };
       cell?.model.setMetadata('jupyter_ai', newMetadata);
       if (cell) {
+        const footer = this._cellFooterTracker.getFooter(cellId);
+        // Add a magic icon to the cell toolbar.
+        // (remove old ones too).
+        footer?.removeToolbarItem('magicIcon');
+        const iconWidget = new Widget({ node: wandIcon.element() });
+        iconWidget.addClass('jp-Toolbar-Icon');
+        footer?.addToolbarItemOnLeft('magicIcon', iconWidget);
         this._cellFooterTracker.showFooter(cellId);
       }
       this._responseHappened.emit({ cell: cell, response: data });
@@ -198,8 +207,6 @@ export class AICellTracker implements IAICellTracker {
    * @returns
    */
   label(): string {
-    console.log('SEEN label??');
-
     const cellId = this.getCurrentActiveCellId();
     if (cellId && cellId in this.pendingCells) {
       return 'AI is thinking...';
@@ -215,7 +222,6 @@ export class AICellTracker implements IAICellTracker {
    * @returns LabIcon
    */
   icon(args: any): VirtualElement.IRenderer | undefined {
-    console.log('SEEN icon??');
     const cellId = this.getCurrentActiveCellId();
     if (cellId && this.pendingCells.get(cellId)) {
       return spinnerIcon;
@@ -230,8 +236,6 @@ export class AICellTracker implements IAICellTracker {
    * @returns `true` if no pending request is outstanding.
    */
   isEnabled(): boolean {
-    console.log('SEEN enabled??');
-
     const cellId = this.getCurrentActiveCellId();
     if (cellId && this.pendingCells.get(cellId)) {
       return false;
@@ -245,8 +249,6 @@ export class AICellTracker implements IAICellTracker {
    * @returns
    */
   getCurrentActiveCell(): Cell | null | undefined {
-    console.log(this._notebookTracker.currentWidget?.content.activeCell);
-
     return this._notebookTracker.currentWidget?.content.activeCell;
   }
 
@@ -256,8 +258,6 @@ export class AICellTracker implements IAICellTracker {
    * @returns
    */
   getCurrentActiveCellId(): string | null | undefined {
-    console.log('getCurrentActiveCellId');
-
     const notebook = this._notebookTracker.currentWidget;
     const idx = notebook?.content.activeCellIndex;
     if (idx !== undefined && notebook) {

@@ -1,7 +1,6 @@
 """
-A Jupyter AI Chat Handler for the 'magic' feature. 
-
-This won't appear as a slash command, since it 
+A listener class that registers and 'listens' to custom Jupyter events 
+that happen when magic wand button response happens.
 """
 import pathlib
 import time
@@ -12,7 +11,6 @@ import traceback
 from jupyter_events.logger import EventLogger
 from langchain.prompts import PromptTemplate
 
-from nbdime.diffing.generic import diff
 from .config import ConfigManager
 from .state import AIWorkflowState, ConfigSchema
 
@@ -56,17 +54,13 @@ class MagicHandler:
         agent = self.config.agents[agent_name]
         # Ensure these two values are in sync.
         request["agent"] = agent.name
-        try:                
-            c: ConfigSchema = {
-                "models": {},
-            }
-            # NOTE: THIS IS A HACK FOR NOW to integrate with Jupyter AI.
-            # Allows you to use your Jupyter AI provider to do things.
-            try:
-                c["lm_provider"] = self.jupyter_ai_config.lm_provider
-            except:
-                pass
-            
+        c: ConfigSchema = {}
+        # NOTE: this is hardcoded to be compatible (and take advantage)
+        # of Jupyter AI if its available.
+        # NOTE: Jupyter AI isn't *required* for the magic wand to work.
+        if self.jupyter_ai_config:
+            c["jupyter_ai_config"] =  self.jupyter_ai_config
+        try:
             response: AIWorkflowState = await agent.workflow.ainvoke(request, config=c)
             self.event_logger.emit(
                 schema_id="https://events.jupyter.org/jupyter_ai/magic_button/v1",

@@ -74,7 +74,8 @@
         "@lumino/widgets": "^2.0.0",
         "@mui/icons-material": "^5.15.7",
         "@mui/material": "^5.15.7",
-        "jupyterlab-cell-input-footer": "^0.2.0",
+        "jupyterlab-cell-diff": "^0.4.2",
+        "jupyterlab-cell-input-footer": "^0.3.0",
         "jupyterlab-eventlistener": "^0.4.0",
         "nbdime": "^7.0.1",
         "react": "^18.2.0"
