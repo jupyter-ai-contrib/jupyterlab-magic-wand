@@ -4641,13 +4641,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jupyterlab-cell-input-footer@npm:^0.2.0":
-  version: 0.2.0
-  resolution: "jupyterlab-cell-input-footer@npm:0.2.0"
+"jupyterlab-cell-diff@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "jupyterlab-cell-diff@npm:0.4.2"
+  dependencies:
+    "@jupyterlab/application": ^4.0.0
+    "@jupyterlab/cells": ^4.0.0
+    "@jupyterlab/codeeditor": ^4.0.0
+    "@jupyterlab/coreutils": ^6.0.0
+    "@jupyterlab/notebook": ^4.0.0
+    "@jupyterlab/services": ^7.0.0
+    "@jupyterlab/ui-components": ^4.0.0
+    "@lumino/widgets": ^2.0.0
+    jupyterlab-cell-input-footer: ^0.3.0
+    nbdime: ^7.0.1
+  checksum: fe7f4dd12458dd0c19815b14fab466db165f818cb9a0d5aca09c90dc054d2e7b9a0addfb14c35dff13c7a7c8fb89b085d45da661da863df33e791c2c8f2a04ea
+  languageName: node
+  linkType: hard
+
+"jupyterlab-cell-input-footer@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "jupyterlab-cell-input-footer@npm:0.3.0"
   dependencies:
     "@jupyterlab/services": ^7.0.0
     "@lumino/coreutils": ^2.1.2
-  checksum: b298f6ba525668ce18c25c1e1bd5c1f515d2c76f9611092b88e1ae2769e2966784455c4d7e80f10061a8482d8c938264af15436faf0234bada101fa0a42d62ef
+  checksum: 88e8a420022a9228a09271f7b7e5ddc15f2bab9f9cf4e11541364a4060d8907ebdee2174efe0ecbbbdfa56d649fda25380e7a0f9d6dbe4d3486b3c0ab2e55a4c
   languageName: node
   linkType: hard
 
@@ -4693,7 +4711,8 @@ __metadata:
     eslint: ^8.36.0
     eslint-config-prettier: ^8.8.0
     eslint-plugin-prettier: ^5.0.0
-    jupyterlab-cell-input-footer: ^0.2.0
+    jupyterlab-cell-diff: ^0.4.2
+    jupyterlab-cell-input-footer: ^0.3.0
     jupyterlab-eventlistener: ^0.4.0
     mkdirp: ^1.0.3
     nbdime: ^7.0.1

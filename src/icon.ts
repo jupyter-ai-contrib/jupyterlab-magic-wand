@@ -6,7 +6,7 @@ import ThumbDownStr from '../style/icons/thumb-down.svg';
 import FeedbackIconStr from '../style/icons/feedback-icon.svg';
 
 export const wandIcon = new LabIcon({
-  name: 'want:Icon',
+  name: 'wand:Icon',
   svgstr: WandIconStr
 });
 

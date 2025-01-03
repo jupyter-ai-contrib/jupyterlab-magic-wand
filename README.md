@@ -5,8 +5,7 @@
 
 An in-cell AI assistant for JupyterLab notebooks
 
-![alt text](docs/README.png "Title")
-
+![alt text](docs/README.png 'Title')
 
 ## Requirements
 

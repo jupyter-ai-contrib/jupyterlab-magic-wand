@@ -1,1 +1,39 @@
 /** Base CSS */
+.jp-MagicDialog-header .jp-MagicDialog-icon {
+  width: 24px;
+  display: inline-block;
+}
+
+.jp-MagicDialog-header .jp-MagicDialog-icon > svg {
+  padding-top: 2px;
+}
+
+.jp-MagicDialog-header .jp-MagicDialog-title {
+  font-size: 24px;
+  display: inline-block;
+  margin-left: 5px;
+}
+
+.jp-MagicDialog-code {
+  padding: 5px;
+  border-radius: 3px;
+  border-width: var(--jp-border-width);
+  border-color: var(--jp-cell-editor-border-color);
+  background-color: var(--jp-cell-editor-background);
+  color: var(--jp-ui-font-color0);
+  font-family: var(--jp-code-font-family-default);
+  overflow-y: auto;
+  height: 125px;
+}
+
+.jp-cell-footer .jp-cellfooter-toolbar .jp-Toolbar-Icon {
+  width: 21px;
+  height: 21px;
+  line-height: 10px;
+}
+
+.jp-cell-footer .jp-cellfooter-toolbar .jp-Toolbar-Icon > svg {
+  width: 16px;
+  height: 16px;
+  margin: auto;
+}
