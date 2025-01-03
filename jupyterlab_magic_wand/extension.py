@@ -25,7 +25,7 @@ class AIMagicExtension(ExtensionApp):
 
     def initialize_settings(self):
         eps = entry_points()
-        agents_eps = eps.select(group="jupyter_ai.agents")
+        agents_eps = eps.select(group="jupyterlab_magic_wand.agents")
         for eps in agents_eps:
             try:
                 agent = eps.load()

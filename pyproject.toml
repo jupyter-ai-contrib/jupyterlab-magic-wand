@@ -39,7 +39,7 @@ dynamic = ["version", "description", "authors", "urls", "keywords"]
 [tool.hatch.version]
 source = "nodejs"
 
-[project.entry-points."jupyter_ai.agents"]
+[project.entry-points."jupyterlab_magic_wand.agents"]
 magic-button-agent = "jupyterlab_magic_wand.agents.magic_agent:agent"
 
 [tool.hatch.metadata.hooks.nodejs]
