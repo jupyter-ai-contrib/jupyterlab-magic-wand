@@ -1,6 +1,6 @@
 {
     "name": "jupyterlab_magic_wand",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "An in-cell AI assistant for JupyterLab notebooks",
     "keywords": [
         "jupyter",
