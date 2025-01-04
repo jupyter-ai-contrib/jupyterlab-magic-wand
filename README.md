@@ -7,6 +7,8 @@ An in-cell AI assistant for JupyterLab notebooks
 
 ![alt text](docs/README.png 'Title')
 
+If you have Jupyter AI installed (and you should!), it will use your model configured there.
+
 ## Requirements
 
 - JupyterLab >= 4.0.0
@@ -16,7 +18,7 @@ An in-cell AI assistant for JupyterLab notebooks
 To install the extension, execute:
 
 ```bash
-pip install jupyterlab_magic_wand
+pip install jupyterlab jupyter-ai jupyterlab_magic_wand
 ```
 
 ## Uninstall
