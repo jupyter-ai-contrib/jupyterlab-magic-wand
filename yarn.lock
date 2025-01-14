@@ -4669,6 +4669,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"jupyterlab-cell-input-footer@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "jupyterlab-cell-input-footer@npm:0.3.1"
+  dependencies:
+    "@jupyterlab/services": ^7.0.0
+    "@lumino/coreutils": ^2.1.2
+  checksum: 62c198f28bd5a4e97ba10ce7f3402996b4108eaf988cebce0f406fa3881de7847fbda42a247804b12196c99009fd64a146d81c705fb783e09a969757ac82583b
+  languageName: node
+  linkType: hard
+
 "jupyterlab-eventlistener@npm:^0.4.0":
   version: 0.4.0
   resolution: "jupyterlab-eventlistener@npm:0.4.0"
@@ -4712,7 +4722,7 @@ __metadata:
     eslint-config-prettier: ^8.8.0
     eslint-plugin-prettier: ^5.0.0
     jupyterlab-cell-diff: ^0.4.2
-    jupyterlab-cell-input-footer: ^0.3.0
+    jupyterlab-cell-input-footer: ^0.3.1
     jupyterlab-eventlistener: ^0.4.0
     mkdirp: ^1.0.3
     nbdime: ^7.0.1
