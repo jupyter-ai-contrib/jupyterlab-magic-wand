@@ -14,8 +14,8 @@
   "jupyter.lab.toolbars": {
     "Cell": [
       {
-        "name": "improve-cell",
-        "command": "jupyterlab_magic_wand:improve-cell",
+        "name": "magic",
+        "command": "jupyterlab_magic_wand:execute",
         "rank": 0
       },
       {
