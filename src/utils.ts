@@ -44,6 +44,11 @@ export type CellContext = {
   next: CellData | null;
 };
 
+type ActiveNotebookCell = {
+  cell: Cell | undefined;
+  notebook: NotebookPanel | undefined;
+};
+
 export function getCellData(cell: Cell): CellData {
   const source = cell?.model.sharedModel.getSource();
   cell?.model.selections;
@@ -112,36 +117,64 @@ export function getActiveCellContext(
   };
 }
 
-type ActiveNotebookCell = {
-  cell: Cell | undefined;
-  notebook: NotebookPanel | undefined;
-};
+/**
+ * Simple method to get the active cell.
+ *
+ * @returns
+ */
+export function getCurrentActiveCell(notebookTracker: INotebookTracker): Cell | null | undefined {
+  return notebookTracker.currentWidget?.content.activeCell;
+}
 
-export function findCell(
-  cellId: string,
-  notebookTracker: INotebookTracker
-): ActiveNotebookCell {
-  // First, try the current notebook in focuse
-  const currentNotebook = notebookTracker.currentWidget;
-  const cell =
-    notebookTracker.currentWidget?.content._findCellById(cellId)?.cell;
-  if (currentNotebook && cell) {
+/**
+ * Get the current active cell's ID.
+ *
+ * @returns
+ */
+export function getCurrentActiveCellId(notebookTracker: INotebookTracker): string | null | undefined {
+  const notebook = notebookTracker.currentWidget;
+  const idx = notebook?.content.activeCellIndex;
+  if (idx !== undefined && notebook) {
+    return notebook.model?.cells.get(idx)?.id;
+  }
+}
+
+  /**
+   * Find a cell based on it's unique ID.
+   *
+   * This will start by searching the currently
+   * active notebook. If the ID is not present there,
+   * we will iterate through all notebooks until
+   * we find the cell. If the cell is never found,
+   * return undefined.
+   *
+   * @param cellId
+   * @returns
+   */
+  export function findCell(
+    cellId: string,
+    notebookTracker: INotebookTracker
+  ): ActiveNotebookCell {
+    // First, try the current notebook in focuse
+    const currentNotebook = notebookTracker.currentWidget;
+    const cell =
+      notebookTracker.currentWidget?.content._findCellById(cellId)?.cell;
+    if (currentNotebook && cell) {
+      return {
+        cell: cell,
+        notebook: currentNotebook
+      };
+    }
+    // Otherwise iterate through notebooks to find the cell.
+    const notebookMatch = notebookTracker.find(notebook => {
+      const cell = notebook.content._findCellById(cellId)?.cell;
+      if (cell) {
+        return true;
+      }
+      return false;
+    });
     return {
       cell: cell,
-      notebook: currentNotebook
+      notebook: notebookMatch
     };
   }
-
-  // Otherwise iterate through notebooks to find the cell.
-  const notebookMatch = notebookTracker.find(notebook => {
-    const cell = notebook.content._findCellById(cellId)?.cell;
-    if (cell) {
-      return true;
-    }
-    return false;
-  });
-  return {
-    cell: cell,
-    notebook: notebookMatch
-  };
-}
