@@ -14,6 +14,8 @@ import { IEventListener } from 'jupyterlab-eventlistener';
 import { ICellFooterTracker } from 'jupyterlab-cell-input-footer';
 import { PendingCellCommand } from './pendingCellCommand';
 import { wandIcon } from './icon';
+import { IMagicProvider } from './provider';
+import { PartialJSONValue } from '@lumino/coreutils';
 
 const PLUGIN_ID = 'jupyterlab_magic_wand';
 const AI_EVENT_SCHEMA_ID =
@@ -148,19 +150,56 @@ const agentCommands: JupyterFrontEndPlugin<void> = {
 };
 
 /**
+ * A plugin providing the magic provider.
+ */
+const magicProviderPlugin: JupyterFrontEndPlugin<IMagicProvider> = {
+  id: PLUGIN_ID + ':magic-provider',
+  autoStart: true,
+  provides: IMagicProvider,
+  activate: async app => {
+    return {
+      magic: async ({
+        codeInput,
+        content,
+        cellId
+      }: IMagicProvider.IMagicContext) => {
+        // Make the request.
+        requestAPI('/api/ai/magic', {
+          method: 'POST',
+          body: JSON.stringify({
+            input: codeInput,
+            context: {
+              cell_id: cellId,
+              content
+            },
+            commands: []
+          })
+        });
+      }
+    };
+  }
+};
+
+/**
  * Initialization data for the jupyterlab-magic-wand extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID + ':button',
   description: 'A cell tracker for the magic wand button.',
   autoStart: true,
+  requires: [
+    INotebookTracker,
+    IEventListener,
+    ICellFooterTracker,
+    IMagicProvider
+  ],
   optional: [ISettingRegistry],
-  requires: [INotebookTracker, IEventListener, ICellFooterTracker],
   activate: async (
     app: JupyterFrontEnd,
     notebookTracker: INotebookTracker,
     eventListener: IEventListener,
-    cellFooterTracker: ICellFooterTracker
+    cellFooterTracker: ICellFooterTracker,
+    magicProvider: IMagicProvider
   ) => {
     console.log(
       `Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:button`
@@ -173,7 +212,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       pendingLabel: 'AI is thinking...',
       icon: wandIcon,
       timeout: 10000,
-      execute: () => {
+      execute: async () => {
         const currentNotebook = notebookTracker.currentWidget;
         const cellContext = getActiveCellContext(currentNotebook);
         const cell = getCurrentActiveCell(notebookTracker);
@@ -184,19 +223,12 @@ const plugin: JupyterFrontEndPlugin<void> = {
         }
 
         const cellId = cellContext.current.cell_id;
-        const codeInput = cell?.model?.sharedModel.getSource();
-
-        // Make the request.
-        requestAPI('/api/ai/magic', {
-          method: 'POST',
-          body: JSON.stringify({
-            input: codeInput,
-            context: {
-              cell_id: cellId,
-              content: currentNotebook?.content.model?.toJSON()
-            },
-            commands: []
-          })
+        const codeInput = cell?.model?.sharedModel.getSource() ?? '';
+        const content = currentNotebook?.content.model?.toJSON();
+        await magicProvider.magic({
+          cellId,
+          codeInput,
+          content
         });
       },
       complete: args => {
@@ -276,4 +308,4 @@ const plugin: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default [plugin, agentCommands];
+export default [plugin, agentCommands, magicProviderPlugin];
