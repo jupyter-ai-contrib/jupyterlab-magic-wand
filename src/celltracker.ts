@@ -18,7 +18,7 @@ import { timeoutDialog, errorDialog } from './components/errordialog';
 import { IMagicProvider } from './provider';
 
 export const IAICellTracker = new Token<IAICellTracker>(
-  'jupyterlab_magic_wand:IAICellTracker'
+  'jupyterlab-magic-wand:IAICellTracker'
 );
 
 export type responseHandledData = {
