@@ -1,6 +1,8 @@
 import logging
+import pathlib
 from traitlets import Instance, Dict, Unicode, default
 from jupyter_server.extension.application import ExtensionApp
+from jupyter_core.paths import jupyter_data_dir
 
 from .magic_handler import MagicHandler
 from .rest_handlers import handlers
@@ -8,7 +10,8 @@ from importlib_metadata import entry_points
 from .config import ConfigManager
 
 
-feedback_logger = logging.getLogger("jupyterlab_magic_wand_feedback")
+# DEFAULT_CUSTOM_AGENT_DIR = str(pathlib.Path(jupyter_data_dir()) / "agents")
+
 
 class AIMagicExtension(ExtensionApp):  
     name = "jupyterlab_magic_wand"
@@ -18,10 +21,8 @@ class AIMagicExtension(ExtensionApp):
     ai_config = Instance(ConfigManager, allow_none=True)
     agents = Dict(key_trait=Unicode, value_trait=Instance(object))
     feedback = Instance(logging.Logger, allow_none=True)
-    
-    @default('feedback')
-    def _default_feedback(self):
-        return feedback_logger
+
+    # custom_agent_dir = Unicode(DEFAULT_CUSTOM_AGENT_DIR.st).tag(config=True)
 
     def initialize_settings(self):
         eps = entry_points()

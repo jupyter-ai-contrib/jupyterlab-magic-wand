@@ -63,6 +63,7 @@
         "@jupyterlab/cells": "^4.0.0",
         "@jupyterlab/coreutils": "^6.0.0",
         "@jupyterlab/docregistry": "^4.0.0",
+        "@jupyterlab/fileeditor": "^4.0.0",
         "@jupyterlab/notebook": "^4.0.0",
         "@jupyterlab/rendermime": "^4.0.0",
         "@jupyterlab/services": "^7.0.0",

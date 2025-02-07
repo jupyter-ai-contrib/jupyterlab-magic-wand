@@ -8,10 +8,25 @@
       "title": "Magic Button Timeout (in seconds)",
       "type": "number",
       "default": 360
+    },
+    "agents": {
+      "title": "Pick an agent.",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/agent"
+      }
     }
   },
   "additionalProperties": false,
   "jupyter.lab.toolbars": {
+    "Editor": [
+      {
+        "name": "agent",
+        "description": "Link file as AI Agent",
+        "command": "register-agent",
+        "rank": 0
+      }
+    ],
     "Cell": [
       {
         "name": "magic",
@@ -31,5 +46,13 @@
         "rank": 0.2
       }
     ]
+  },
+  "definitions": {
+    "agent": {
+      "name": {
+        "title": "Agent Name",
+        "type": "string"
+      }
+    }
   }
 }

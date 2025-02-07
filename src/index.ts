@@ -18,7 +18,14 @@ import { IEventListener } from 'jupyterlab-eventlistener';
 import { ICellFooterTracker } from 'jupyterlab-cell-input-footer';
 import { PendingCellCommand } from './pendingCellCommand';
 import { wandIcon } from './icon';
+import { linkIcon } from '@jupyterlab/ui-components';
+import { IEditorTracker } from '@jupyterlab/fileeditor';
+import {
+  IFormRenderer,
+  IFormRendererRegistry,
+} from '@jupyterlab/ui-components';
 
+import type { FieldProps } from '@rjsf/utils';
 
 const PLUGIN_ID = 'jupyterlab_magic_wand';
 const AI_EVENT_SCHEMA_ID =
@@ -54,8 +61,12 @@ const agentCommands: JupyterFrontEndPlugin<void> = {
   id: PLUGIN_ID + ':agentCommands',
   description: 'A set of custom commands that AI agents can use.',
   autoStart: true,
-  requires: [INotebookTracker],
-  activate: async (app: JupyterFrontEnd, notebookTracker: INotebookTracker) => {
+  requires: [INotebookTracker, IEditorTracker],
+  activate: async (
+    app: JupyterFrontEnd, 
+    notebookTracker: INotebookTracker, 
+    editorTracker: IEditorTracker
+  ) => {
     console.log(
       `Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:agentCommands`
     );
@@ -151,23 +162,44 @@ const agentCommands: JupyterFrontEndPlugin<void> = {
         sharedCell?.changed.connect(updateAIEditedField);
       }
     });
+    console.log("WAS THIS SEEN?")
+    app.commands.addCommand('register-agent', {
+      icon: linkIcon,
+      execute: () => {
+        const path = editorTracker.currentWidget?.content.context.path;
+        requestAPI(
+          'api/ai/agents', {
+            method: 'POST',
+            body: JSON.stringify({path: path})
+          }
+        )
+      }
+    })
   }
 };
+
+
+// const SETTINGS = {
+  
+// }
+
 
 /**
  * Initialization data for the jupyterlab-magic-wand extension.
  */
 const plugin: JupyterFrontEndPlugin<void> = {
-  id: PLUGIN_ID + ':button',
+  id: PLUGIN_ID + ':plugin',
   description: 'A cell tracker for the magic wand button.',
   autoStart: true,
-  optional: [ISettingRegistry],
+  optional: [ISettingRegistry, IFormRendererRegistry],
   requires: [INotebookTracker, IEventListener, ICellFooterTracker],
   activate: async (
     app: JupyterFrontEnd,
     notebookTracker: INotebookTracker,
     eventListener: IEventListener,
-    cellFooterTracker: ICellFooterTracker
+    cellFooterTracker: ICellFooterTracker,
+    settings: ISettingRegistry,
+    settingRendererRegistry: IFormRendererRegistry | null
   ) => {
     console.log(
       `Jupyter Magic Wand plugin extension activated: ${PLUGIN_ID}:button`
@@ -288,6 +320,54 @@ const plugin: JupyterFrontEndPlugin<void> = {
 };
 
 
+const settingsPlugin: JupyterFrontEndPlugin<void> = {
+  activate: activateSettings,
+  id: PLUGIN_ID + ':settings',
+  description: 'Provides the agent settings.',
+  requires: [ISettingRegistry],
+  optional: [IFormRendererRegistry],
+  autoStart: true
+};
+
+/**
+ * Activate the settings.
+ */
+function activateSettings(
+  app: JupyterFrontEnd,
+  settingRegistry: ISettingRegistry,
+  settingRendererRegistry: IFormRendererRegistry | null
+): void {
+
+  const updateOptions = (settings: ISettingRegistry.ISettings) => {
+    const options = settings.composite as Required<LanguageServersExperimental>;
+
+  };
 
 
-export default [plugin, agentCommands];
+  settingRegistry
+  .load(plugin.id)
+  .then(settings => {
+    updateOptions(settings);
+    settings.changed.connect(() => {
+      updateOptions(settings);
+    });
+  })
+  .catch((reason: Error) => {
+    console.error(reason.message);
+  });
+
+  if (settingRendererRegistry) {
+  const renderer: IFormRenderer = {
+    fieldRenderer: (props: FieldProps) => {
+      return renderServerSetting(props, translator);
+    }
+  };
+  settingRendererRegistry.addRenderer(
+    `${plugin.id}`,
+    renderer
+  );
+}
+
+
+
+export default [plugin, agentCommand, settingsPlugin];
