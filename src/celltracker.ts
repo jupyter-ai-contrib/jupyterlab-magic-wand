@@ -355,7 +355,11 @@ export class AICellTracker implements IAICellTracker {
 
     const codeInput = cell?.model?.sharedModel.getSource() ?? '';
     const content = currentNotebook?.content.model?.toJSON();
-    await this._magicProvider.magic({cellId, codeInput, content});
+    await this._magicProvider.magic({
+      cellId,
+      codeInput,
+      content
+    });
 
     this._commandRegistry.notifyCommandChanged(this.commandId);
   }

@@ -15,7 +15,6 @@ import { ICellFooterTracker } from 'jupyterlab-cell-input-footer';
 import { PendingCellCommand } from './pendingCellCommand';
 import { wandIcon } from './icon';
 import { IMagicProvider } from './provider';
-import { PartialJSONValue } from '@lumino/coreutils';
 
 const PLUGIN_ID = 'jupyterlab_magic_wand';
 const AI_EVENT_SCHEMA_ID =
