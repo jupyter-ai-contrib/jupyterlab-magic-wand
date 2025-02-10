@@ -309,3 +309,5 @@ const plugin: JupyterFrontEndPlugin<void> = {
 };
 
 export default [plugin, agentCommands, magicProviderPlugin];
+
+export * from './provider';
