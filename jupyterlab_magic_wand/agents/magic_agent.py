@@ -93,9 +93,9 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
     current = get_cell(cell_id, state)
     # Spell check
     if current["source"].strip() != "":
-        response = (await llm.ainvoke(input=f"Does the following input look like a prompt to write code (answer 'code' only) or content to be editted (answer 'content' only)?\n Input: {current['source']}")).content
+        response = (await llm.ainvoke(input=f"Does the following input look like a prompt to write code (answer 'code' only) or content to be editted (answer 'content' only)?\n Input: {current['source']}"))
         if "code" in response.lower():
-            response = (await llm.ainvoke(input=f"Write code based on the prompt. Then, update the code to make it more efficient, add code comments, and respond with only the code and comments.\n Input: {current['source']}")).content
+            response = (await llm.ainvoke(input=f"Write code based on the prompt. Then, update the code to make it more efficient, add code comments, and respond with only the code and comments.\n Input: {current['source']}"))
             response = sanitize_code(response)
             messages = state.get("messages", []) or []
             messages.append(response)
@@ -106,7 +106,7 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
             ])
             return {"commands": commands, "messages": messages}
         prompt = SPELLCHECK_MARKDOWN.format(input=current["source"])
-        response = (await llm.ainvoke(input=prompt)).content
+        response = (await llm.ainvoke(input=prompt))
         messages = state.get("messages", []) or []
         messages.append(response)
         commands = state["commands"]
@@ -132,7 +132,7 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
         next_cell = cells[i+1]
         if next_cell["cell_type"] == "code":
             prompt = SUMMARIZE_CELL.format(input=next_cell["source"])
-            response = (await llm.ainvoke(input=prompt)).content
+            response = (await llm.ainvoke(input=prompt))
             messages = state.get("messages", []) or []
             messages.append(response)
             commands = state["commands"]
@@ -171,7 +171,7 @@ async def route_exception(state: AIWorkflowState, config: RunnableConfig) -> dic
         exception_name=exception["ename"],
         exception_value=exception["evalue"]
     )
-    response = (await llm.ainvoke(input=prompt)).content
+    response = (await llm.ainvoke(input=prompt))
     response = sanitize_code(response)
     messages = state.get("messages", []) or []
     messages.append(response)
@@ -229,7 +229,7 @@ async def route_code(state: AIWorkflowState, config: RunnableConfig):
     source = source.strip()
     if source:
         prompt = IMPROVE_PROMPT.format(code=source)
-        response = (await llm.ainvoke(prompt)).content
+        response = (await llm.ainvoke(prompt, stream=False))
         response = sanitize_code(response)
         messages = state.get("messages", []) or []
         messages.append(response)
@@ -241,7 +241,7 @@ async def route_code(state: AIWorkflowState, config: RunnableConfig):
         return {"commands": commands, "messages": messages}
     
     prompt = prompt_new_cell_using_context(cell_id, state)   
-    response = (await llm.ainvoke(input=prompt)).content
+    response = (await llm.ainvoke(input=prompt, stream=False))
     response = sanitize_code(response)
     messages = state.get("messages", []) or []
     messages.append(response)
