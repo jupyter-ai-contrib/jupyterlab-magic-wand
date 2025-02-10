@@ -150,7 +150,10 @@ const agentCommands: JupyterFrontEndPlugin<void> = {
 };
 
 /**
- * A plugin providing the magic provider.
+ * A plugin providing the default magic provider.
+ *
+ * By default, call the /api/ai/magic endpoint provided by the jupyterlab-magic-wand
+ * server extension.
  */
 const magicProviderPlugin: JupyterFrontEndPlugin<IMagicProvider> = {
   id: PLUGIN_ID + ':magic-provider',
