@@ -2,6 +2,27 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.0
+
+([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.3.0...0901abd496012fe7c32b23637e19310f8cf9eb9c))
+
+### Enhancements made
+
+- Add a new plugin to provide `IMagicProvider` [#5](https://github.com/Zsailer/jupyterlab-magic-wand/pull/5) ([@jtpio](https://github.com/jtpio))
+- Create a "pending" command API [#3](https://github.com/Zsailer/jupyterlab-magic-wand/pull/3) ([@Zsailer](https://github.com/Zsailer))
+
+### Bugs fixed
+
+- Use completion interface for models [#8](https://github.com/Zsailer/jupyterlab-magic-wand/pull/8) ([@Zsailer](https://github.com/Zsailer))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-01-03&to=2025-02-11&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Agithub-actions+updated%3A2025-01-03..2025-02-11&type=Issues) | [@jtpio](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Ajtpio+updated%3A2025-01-03..2025-02-11&type=Issues) | [@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-01-03..2025-02-11&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.3.0
 
 ([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.2.1...00f011339fb873cf3ca6d0d819112bd5b1baff7c))
@@ -15,8 +36,6 @@
 ([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-01-03&to=2025-01-03&type=c))
 
 [@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-01-03..2025-01-03&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.2.1
 
