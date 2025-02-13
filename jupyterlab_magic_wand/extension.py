@@ -30,7 +30,7 @@ class AIMagicExtension(ExtensionApp):
             try:
                 agent = eps.load()
                 self.agents[agent.name] = agent
-                self.log.error(f"Successfully loaded workflow: {agent.name}")
+                self.log.info(f"Successfully loaded workflow: {agent.name}")
             except Exception as err:
                 self.log.error(err)
                 self.log.error(f"Unable to load {agent.name}")
