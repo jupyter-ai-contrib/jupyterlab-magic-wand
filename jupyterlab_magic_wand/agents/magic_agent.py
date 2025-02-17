@@ -7,10 +7,11 @@ This is compatible with Jupyter AI.
 """
 import json
 import uuid
-from typing import Sequence
+from typing import Sequence, Union
 from langgraph.graph import StateGraph
 from langgraph.graph import END, START
 from langchain_core.runnables import RunnableConfig
+from langchain_core.messages import BaseMessage
 from jupyterlab_magic_wand.state import AIWorkflowState, ConfigSchema
 from jupyterlab_magic_wand.agents.lab_commands import (
     update_cell_source, 
@@ -87,15 +88,30 @@ Input:
 {input}
 """
 
+
+def _cast_ai_response(response: Union[str, BaseMessage]):
+    """
+    The response type is dependent on the type of LLM SDK. 
+    
+    Cast a response into a string.
+    """
+    # Chat models return a Message object. The response string 
+    # is under the `.content` property.
+    if isinstance(response, BaseMessage):
+        return response.content
+    if not isinstance(response, str):
+        raise Exception("The response type must be 'str' or 'BaseMessage'.")
+    return response
+
 async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict:
     llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
     cell_id = state["context"]["cell_id"]
     current = get_cell(cell_id, state)
     # Spell check
     if current["source"].strip() != "":
-        response = (await llm.ainvoke(input=f"Does the following input look like a prompt to write code (answer 'code' only) or content to be editted (answer 'content' only)?\n Input: {current['source']}"))
+        response = _cast_ai_response(await llm.ainvoke(input=f"Does the following input look like a prompt to write code (answer 'code' only) or content to be editted (answer 'content' only)?\n Input: {current['source']}"))
         if "code" in response.lower():
-            response = (await llm.ainvoke(input=f"Write code based on the prompt. Then, update the code to make it more efficient, add code comments, and respond with only the code and comments.\n Input: {current['source']}"))
+            response = _cast_ai_response(await llm.ainvoke(input=f"Write code based on the prompt. Then, update the code to make it more efficient, add code comments, and respond with only the code and comments.\n Input: {current['source']}"))
             response = sanitize_code(response)
             messages = state.get("messages", []) or []
             messages.append(response)
@@ -106,7 +122,7 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
             ])
             return {"commands": commands, "messages": messages}
         prompt = SPELLCHECK_MARKDOWN.format(input=current["source"])
-        response = (await llm.ainvoke(input=prompt))
+        response = _cast_ai_response(await llm.ainvoke(input=prompt))
         messages = state.get("messages", []) or []
         messages.append(response)
         commands = state["commands"]
@@ -132,7 +148,7 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
         next_cell = cells[i+1]
         if next_cell["cell_type"] == "code":
             prompt = SUMMARIZE_CELL.format(input=next_cell["source"])
-            response = (await llm.ainvoke(input=prompt))
+            response = _cast_ai_response(await llm.ainvoke(input=prompt))
             messages = state.get("messages", []) or []
             messages.append(response)
             commands = state["commands"]
@@ -171,7 +187,7 @@ async def route_exception(state: AIWorkflowState, config: RunnableConfig) -> dic
         exception_name=exception["ename"],
         exception_value=exception["evalue"]
     )
-    response = (await llm.ainvoke(input=prompt))
+    response = _cast_ai_response(await llm.ainvoke(input=prompt))
     response = sanitize_code(response)
     messages = state.get("messages", []) or []
     messages.append(response)
@@ -229,7 +245,7 @@ async def route_code(state: AIWorkflowState, config: RunnableConfig):
     source = source.strip()
     if source:
         prompt = IMPROVE_PROMPT.format(code=source)
-        response = (await llm.ainvoke(prompt, stream=False))
+        response = _cast_ai_response(await llm.ainvoke(prompt, stream=False))
         response = sanitize_code(response)
         messages = state.get("messages", []) or []
         messages.append(response)
@@ -241,7 +257,7 @@ async def route_code(state: AIWorkflowState, config: RunnableConfig):
         return {"commands": commands, "messages": messages}
     
     prompt = prompt_new_cell_using_context(cell_id, state)   
-    response = (await llm.ainvoke(input=prompt, stream=False))
+    response = _cast_ai_response(await llm.ainvoke(input=prompt, stream=False))
     response = sanitize_code(response)
     messages = state.get("messages", []) or []
     messages.append(response)
