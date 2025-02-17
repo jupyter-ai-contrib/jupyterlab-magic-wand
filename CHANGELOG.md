@@ -2,6 +2,23 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.4.1
+
+([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.4.0...a138154ec8d8ffc0b4a7b25276b963e10f07201f))
+
+### Bugs fixed
+
+- Add wrapper that casts LLM response to a string. [#11](https://github.com/Zsailer/jupyterlab-magic-wand/pull/11) ([@Zsailer](https://github.com/Zsailer))
+- Use `self.log.info` instead of `self.log.error` [#10](https://github.com/Zsailer/jupyterlab-magic-wand/pull/10) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-02-11&to=2025-02-17&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Agithub-actions+updated%3A2025-02-11..2025-02-17&type=Issues) | [@jtpio](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Ajtpio+updated%3A2025-02-11..2025-02-17&type=Issues) | [@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-02-11..2025-02-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.0
 
 ([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.3.0...0901abd496012fe7c32b23637e19310f8cf9eb9c))
@@ -20,8 +37,6 @@
 ([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-01-03&to=2025-02-11&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Agithub-actions+updated%3A2025-01-03..2025-02-11&type=Issues) | [@jtpio](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Ajtpio+updated%3A2025-01-03..2025-02-11&type=Issues) | [@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-01-03..2025-02-11&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.3.0
 
