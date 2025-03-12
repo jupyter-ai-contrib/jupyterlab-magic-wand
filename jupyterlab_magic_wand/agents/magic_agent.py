@@ -7,29 +7,53 @@ This is compatible with Jupyter AI.
 """
 import json
 import uuid
-from typing import Sequence, Union
+from typing import Sequence, Union, List, Optional
 from langgraph.graph import StateGraph
 from langgraph.graph import END, START
 from langchain_core.runnables import RunnableConfig
 from langchain_core.messages import BaseMessage
-from jupyterlab_magic_wand.state import AIWorkflowState, ConfigSchema
 from jupyterlab_magic_wand.agents.lab_commands import (
     update_cell_source, 
     show_diff, 
     insert_cell_below
 )
-from jupyterlab_magic_wand.agents.base import Agent
+from .base import Agent
 
 from langchain_core.messages import HumanMessage
+from pydantic import BaseModel
 
-graph = StateGraph(AIWorkflowState, config_schema=ConfigSchema)
 
+class LabCommand(BaseModel):
+    name: str
+    args: dict
+
+
+class Context(BaseModel):
+    cell_id: str
+    content: dict
+
+
+class Request(BaseModel):
+    input: str
+    context: Context
+    commands: Optional[List[LabCommand]] = None
+
+    
+class Response(BaseModel):
+    agent: str
+    input: str
+    context: str
+    messages: list
+    commands: List[LabCommand]
+    
+    
+graph = StateGraph(Request)
 
 def get_jupyter_ai_model(jupyter_ai_config):
     lm_provider = jupyter_ai_config.lm_provider
     return lm_provider(**jupyter_ai_config.lm_provider_params)
 
-def get_cell(cell_id: str, state: AIWorkflowState) -> dict:
+def get_cell(cell_id: str, state: Request) -> dict:
     content = state["context"]["content"]
     cells = content["cells"]
     
@@ -60,7 +84,7 @@ def sanitize_code(code: str) -> str:
     )
 
 
-async def router(state: AIWorkflowState) -> Sequence[str]:
+async def router(state: Request) -> Sequence[str]:
     cell_id = state["context"]["cell_id"]
     current = get_cell(cell_id, state)
     if current.get("cell_type") == "markdown":
@@ -103,7 +127,7 @@ def _cast_ai_response(response: Union[str, BaseMessage]):
         raise Exception("The response type must be 'str' or 'BaseMessage'.")
     return response
 
-async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict:
+async def route_markdown(state: Request, config: RunnableConfig) -> dict:
     llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
     cell_id = state["context"]["cell_id"]
     current = get_cell(cell_id, state)
@@ -177,7 +201,7 @@ Exception Value:
 {exception_value}
 """
 
-async def route_exception(state: AIWorkflowState, config: RunnableConfig) -> dict:
+async def route_exception(state: Request, config: RunnableConfig) -> dict:
     llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
     cell_id = state["context"]["cell_id"]
     current = get_cell(cell_id, state)
@@ -236,7 +260,7 @@ def prompt_new_cell_using_context(cell_id, state):
     return prompt
 
 
-async def route_code(state: AIWorkflowState, config: RunnableConfig):
+async def route_code(state: Request, config: RunnableConfig):
     llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
 
     cell_id = state["context"]["cell_id"]
@@ -281,9 +305,12 @@ graph.add_conditional_edges(
 
 workflow = graph.compile()
 
+
 agent = Agent(
     name = "Magic Button Agent",
     description = "Magic Button Agent",
     workflow = workflow,
-    version = "0.0.1"
+    version = "0.0.1",
+    request=Request,
+    response=Response
 )

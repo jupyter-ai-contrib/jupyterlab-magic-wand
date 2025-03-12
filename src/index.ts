@@ -169,12 +169,14 @@ const magicProviderPlugin: JupyterFrontEndPlugin<IMagicProvider> = {
         requestAPI('/api/ai/magic', {
           method: 'POST',
           body: JSON.stringify({
-            input: codeInput,
-            context: {
-              cell_id: cellId,
-              content
-            },
-            commands: []
+            request: {
+              input: codeInput,
+              context: {
+                cell_id: cellId,
+                content
+              },
+              commands: []
+            }
           })
         });
       }
