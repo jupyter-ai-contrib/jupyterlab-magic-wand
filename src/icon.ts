@@ -3,7 +3,6 @@ import WandIconStr from '../style/icons/wand-icon.svg';
 import SpinnerIconStr from '../style/icons/spinner-icon.svg';
 import ThumbUpStr from '../style/icons/thumb-up.svg';
 import ThumbDownStr from '../style/icons/thumb-down.svg';
-import FeedbackIconStr from '../style/icons/feedback-icon.svg';
 
 export const wandIcon = new LabIcon({
   name: 'wand:Icon',
@@ -23,9 +22,4 @@ export const thumbUpIcon = new LabIcon({
 export const thumbDownIcon = new LabIcon({
   name: 'thumbDown:Icon',
   svgstr: ThumbDownStr
-});
-
-export const feedbackIcon = new LabIcon({
-  name: 'feedback:Icon',
-  svgstr: FeedbackIconStr
 });

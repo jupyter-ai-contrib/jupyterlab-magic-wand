@@ -7,30 +7,50 @@ This is compatible with Jupyter AI.
 """
 import json
 import uuid
-from typing import Sequence, Union
+from typing import Sequence, Union, List, Optional
 from langgraph.graph import StateGraph
 from langgraph.graph import END, START
 from langchain_core.runnables import RunnableConfig
 from langchain_core.messages import BaseMessage
-from jupyterlab_magic_wand.state import AIWorkflowState, ConfigSchema
-from jupyterlab_magic_wand.agents.lab_commands import (
+from jupyterlab_magic_wand.agents.tools import (
     update_cell_source, 
     show_diff, 
     insert_cell_below
 )
-from jupyterlab_magic_wand.agents.base import Agent
+from .base import Agent
 
 from langchain_core.messages import HumanMessage
+from pydantic import BaseModel
 
-graph = StateGraph(AIWorkflowState, config_schema=ConfigSchema)
+
+class LabCommand(BaseModel):
+    name: str
+    args: dict
+
+
+class Context(BaseModel):
+    cell_id: str
+    content: dict
+
+
+class State(BaseModel):
+    agent: Optional[str] = None
+    input: str
+    context: Context
+    messages: list = []
+    commands: Optional[List[LabCommand]] = None
+
+    
+graph = StateGraph(State)
 
 
 def get_jupyter_ai_model(jupyter_ai_config):
     lm_provider = jupyter_ai_config.lm_provider
     return lm_provider(**jupyter_ai_config.lm_provider_params)
 
-def get_cell(cell_id: str, state: AIWorkflowState) -> dict:
-    content = state["context"]["content"]
+
+def get_cell(cell_id: str, state: State) -> dict:
+    content = state.context.content
     cells = content["cells"]
     
     for cell in cells:
@@ -60,8 +80,8 @@ def sanitize_code(code: str) -> str:
     )
 
 
-async def router(state: AIWorkflowState) -> Sequence[str]:
-    cell_id = state["context"]["cell_id"]
+async def router(state: State) -> Sequence[str]:
+    cell_id = state.context.cell_id
     current = get_cell(cell_id, state)
     if current.get("cell_type") == "markdown":
         return ["route_markdown"]
@@ -103,9 +123,10 @@ def _cast_ai_response(response: Union[str, BaseMessage]):
         raise Exception("The response type must be 'str' or 'BaseMessage'.")
     return response
 
-async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict:
-    llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
-    cell_id = state["context"]["cell_id"]
+
+async def route_markdown(state: State, config: RunnableConfig) -> dict:
+    llm = get_jupyter_ai_model(config["configurable"]["jai_config_manager"])
+    cell_id = state.context.cell_id
     current = get_cell(cell_id, state)
     # Spell check
     if current["source"].strip() != "":
@@ -113,9 +134,9 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
         if "code" in response.lower():
             response = _cast_ai_response(await llm.ainvoke(input=f"Write code based on the prompt. Then, update the code to make it more efficient, add code comments, and respond with only the code and comments.\n Input: {current['source']}"))
             response = sanitize_code(response)
-            messages = state.get("messages", []) or []
+            messages = state.messages
             messages.append(response)
-            commands = state["commands"]
+            commands = state.commands
             new_cell_id = str(uuid.uuid4())
             commands.extend([
                 insert_cell_below(cell_id, source=response, type="code", new_cell_id=new_cell_id),
@@ -123,9 +144,9 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
             return {"commands": commands, "messages": messages}
         prompt = SPELLCHECK_MARKDOWN.format(input=current["source"])
         response = _cast_ai_response(await llm.ainvoke(input=prompt))
-        messages = state.get("messages", []) or []
+        messages = state.messages
         messages.append(response)
-        commands = state["commands"]
+        commands = state.commands
         commands.extend([
             update_cell_source(cell_id, source=response),
             {
@@ -135,8 +156,8 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
         ])
         return {"commands": commands, "messages": messages}
 
-    content = state["context"]["content"]
-    cell_id = state["context"]["cell_id"]
+    content = state.context.content
+    cell_id = state.context.cell_id
     cells = content["cells"]
 
     
@@ -151,7 +172,7 @@ async def route_markdown(state: AIWorkflowState, config: RunnableConfig) -> dict
             response = _cast_ai_response(await llm.ainvoke(input=prompt))
             messages = state.get("messages", []) or []
             messages.append(response)
-            commands = state["commands"]
+            commands = state.commands
             commands.extend([
                 update_cell_source(cell_id, source=response),
                 {
@@ -177,9 +198,9 @@ Exception Value:
 {exception_value}
 """
 
-async def route_exception(state: AIWorkflowState, config: RunnableConfig) -> dict:
-    llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
-    cell_id = state["context"]["cell_id"]
+async def route_exception(state: State, config: RunnableConfig) -> dict:
+    llm = get_jupyter_ai_model(config["configurable"]["jai_config_manager"])
+    cell_id = state.context.cell_id
     current = get_cell(cell_id, state)
     exception = get_exception(current)
     prompt = exception_prompt.format(
@@ -189,9 +210,9 @@ async def route_exception(state: AIWorkflowState, config: RunnableConfig) -> dic
     )
     response = _cast_ai_response(await llm.ainvoke(input=prompt))
     response = sanitize_code(response)
-    messages = state.get("messages", []) or []
+    messages = state.messages
     messages.append(response)
-    commands = state["commands"]
+    commands = state.commands
     commands.extend([
         update_cell_source(cell_id, source=response),
         show_diff(cell_id, current["source"], response),
@@ -215,7 +236,7 @@ You are working in a Jupyter Notebook. Use the previous ordered cells for contex
 """
 
 def prompt_new_cell_using_context(cell_id, state):
-    content = state["context"]["content"]
+    content = state.context.content
     cells = content["cells"]
     
     for i, cell in enumerate(cells):
@@ -236,10 +257,10 @@ def prompt_new_cell_using_context(cell_id, state):
     return prompt
 
 
-async def route_code(state: AIWorkflowState, config: RunnableConfig):
-    llm = get_jupyter_ai_model(config["configurable"]["jupyter_ai_config"])
+async def route_code(state: State, config: RunnableConfig):
+    llm = get_jupyter_ai_model(config["configurable"]["jai_config_manager"])
 
-    cell_id = state["context"]["cell_id"]
+    cell_id = state.context.cell_id
     current = get_cell(cell_id, state)
     source = current["source"]
     source = source.strip()
@@ -247,9 +268,9 @@ async def route_code(state: AIWorkflowState, config: RunnableConfig):
         prompt = IMPROVE_PROMPT.format(code=source)
         response = _cast_ai_response(await llm.ainvoke(prompt, stream=False))
         response = sanitize_code(response)
-        messages = state.get("messages", []) or []
+        messages = state.messages
         messages.append(response)
-        commands = state["commands"]
+        commands = state.commands
         commands.extend([
             update_cell_source(cell_id, source=response),
             show_diff(cell_id, current["source"], response),
@@ -259,9 +280,9 @@ async def route_code(state: AIWorkflowState, config: RunnableConfig):
     prompt = prompt_new_cell_using_context(cell_id, state)   
     response = _cast_ai_response(await llm.ainvoke(input=prompt, stream=False))
     response = sanitize_code(response)
-    messages = state.get("messages", []) or []
+    messages = state.messages
     messages.append(response)
-    commands = state["commands"]
+    commands = state.commands
     commands.extend([
         update_cell_source(cell_id, source=response),
     ])
@@ -281,9 +302,11 @@ graph.add_conditional_edges(
 
 workflow = graph.compile()
 
+
 agent = Agent(
     name = "Magic Button Agent",
     description = "Magic Button Agent",
     workflow = workflow,
-    version = "0.0.1"
+    version = "0.0.1",
+    state=State
 )

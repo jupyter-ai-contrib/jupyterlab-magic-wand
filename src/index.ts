@@ -18,30 +18,36 @@ import { IMagicProvider } from './provider';
 
 const PLUGIN_ID = 'jupyterlab_magic_wand';
 const AI_EVENT_SCHEMA_ID =
-  'https://events.jupyter.org/jupyter_ai/magic_button/v1';
+  'https://events.jupyter.org/jupyter-ai/agents/Magic+Button+Agent/state';
 const AI_ERROR_EVENT_SCHEMA_ID =
   'https://events.jupyter.org/jupyter_ai/error/v1';
 
-export type ERROR_EVENT = {
-  type: string;
-  id: string;
-  time: string;
-  reply_to: string;
-  error_type: string;
-  message: string;
-};
 
 export type LabCommand = {
   name: string;
   args: any;
 };
 
+export type Context = {
+  cell_id: string;
+  content: any;
+}
+
 export type AIWorkflowState = {
   agent: string;
   input: string;
-  context: any;
+  context: Context;
   messages?: Array<string>;
   commands: Array<LabCommand>;
+};
+
+export type ERROR_EVENT = {
+  type: string;
+  id: string;
+  time: string;
+  state: AIWorkflowState;
+  error_type: string;
+  message: string;
 };
 
 const agentCommands: JupyterFrontEndPlugin<void> = {
@@ -169,12 +175,14 @@ const magicProviderPlugin: JupyterFrontEndPlugin<IMagicProvider> = {
         requestAPI('/api/ai/magic', {
           method: 'POST',
           body: JSON.stringify({
-            input: codeInput,
-            context: {
-              cell_id: cellId,
-              content
-            },
-            commands: []
+            request: {
+              input: codeInput,
+              context: {
+                cell_id: cellId,
+                content
+              },
+              commands: []
+            }
           })
         });
       }
@@ -289,7 +297,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       async (manager, schemaId, event: Event.Emission) => {
         const data = event as any as ERROR_EVENT;
 
-        const { cell } = findCell(data.reply_to, notebookTracker);
+        const { cell } = findCell(data.state.context.cell_id, notebookTracker);
         cell?.model.setMetadata('editable', true);
         cell?.saveEditableState();
 
