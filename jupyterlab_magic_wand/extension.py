@@ -24,15 +24,13 @@ class AIMagicExtension(ExtensionApp):
         eps = entry_points()
         agents_eps = eps.select(group="jupyterlab_magic_wand.agents")
         for eps in agents_eps:
-            agent: Agent = eps.load()
-            self.agents[agent.name] = agent
-            self.serverapp.event_logger.register_event_schema(agent.response_schema)
-            self.log.info(f"Successfully loaded workflow: {agent.name}")
             try:
                 agent: Agent = eps.load()
                 self.agents[agent.name] = agent
-                self.serverapp.event_logger.register_event_schema(agent.response_schema)
-                self.log.info(f"Successfully loaded workflow: {agent.name}")
+                import json
+                print(json.dumps(agent.state_schema, indent=2))
+                self.serverapp.event_logger.register_event_schema(agent.state_schema)
+                self.log.info(f"Successfully loaded agent: {agent.name}")
             except Exception as err:
                 self.log.error(err)
                 self.log.error(f"Unable to load {agent.name}")

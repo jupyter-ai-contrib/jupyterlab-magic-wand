@@ -6,6 +6,7 @@ import tornado
 import traceback
 
 from jupyter_server.extension.handler import ExtensionHandlerMixin
+from pydantic import BaseModel
 from .agents.base import Agent
 
 class AIMagicHandler(ExtensionHandlerMixin, APIHandler):
@@ -20,20 +21,25 @@ class AIMagicHandler(ExtensionHandlerMixin, APIHandler):
 
     @tornado.web.authenticated
     async def post(self):
+        agent_name = self.get_query_argument("agent", self.current_agent)
+        agent: Agent = self.agents[agent_name]
         body = self.get_json_body()
-        agent_name: Agent = body.get("agent", self.current_agent)
-        agent = self.agents[agent_name]
-        request = agent.request.model_validate(body.get("request"))
+        state = agent.state.model_validate(body.get("request"))
+        response = await agent.workflow.ainvoke(
+            state, 
+            config={"jai_config_manager": self.settings.get("jai_config_manager")}
+        )
         try:
-            response = await agent.workflow.ainvoke(request)
+            # Validate the response.
+            response_state = agent.state.model_validate(response)
             self.event_logger.emit(
-                schema_id="https://events.jupyter.org/jupyter_ai/magic_button/v1",
-                data=response
+                schema_id=agent.state_schema_id,
+                data=response_state.model_dump()
             )
         except Exception as e:
-            await self.handle_exc(e, request)
+            await self.handle_exc(e, agent, state)
 
-    async def handle_exc(self,  err: Exception, request: any):
+    async def handle_exc(self,  err: Exception, agent: Agent, state: BaseModel):
         exception_string = ""
         try:
             raise err 
@@ -46,7 +52,7 @@ class AIMagicHandler(ExtensionHandlerMixin, APIHandler):
                 type="Error",
                 id='',
                 time=time.time(),
-                reply_to=request["context"]["cell_id"],
+                state=state.model_dump(),
                 error_type=str(err),
                 message=exception_string
             )
