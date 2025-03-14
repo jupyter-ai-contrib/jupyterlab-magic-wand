@@ -28,7 +28,6 @@ class AIMagicExtension(ExtensionApp):
                 agent: Agent = eps.load()
                 self.agents[agent.name] = agent
                 import json
-                print(json.dumps(agent.state_schema, indent=2))
                 self.serverapp.event_logger.register_event_schema(agent.state_schema)
                 self.log.info(f"Successfully loaded agent: {agent.name}")
             except Exception as err:
