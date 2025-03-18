@@ -2,6 +2,22 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.5.0
+
+([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.4.1...7fa74ea3fb5423069485e248c0f702d4314a1e61))
+
+### Merged PRs
+
+- Simplify server extension to make agent development lightweight [#12](https://github.com/Zsailer/jupyterlab-magic-wand/pull/12) ([@Zsailer](https://github.com/Zsailer))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-02-17&to=2025-03-18&type=c))
+
+[@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-02-17..2025-03-18&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.4.1
 
 ([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.4.0...a138154ec8d8ffc0b4a7b25276b963e10f07201f))
@@ -16,8 +32,6 @@
 ([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-02-11&to=2025-02-17&type=c))
 
 [@github-actions](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Agithub-actions+updated%3A2025-02-11..2025-02-17&type=Issues) | [@jtpio](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3Ajtpio+updated%3A2025-02-11..2025-02-17&type=Issues) | [@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-02-11..2025-02-17&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.0
 
