@@ -22,7 +22,6 @@ const AI_EVENT_SCHEMA_ID =
 const AI_ERROR_EVENT_SCHEMA_ID =
   'https://events.jupyter.org/jupyter_ai/error/v1';
 
-
 export type LabCommand = {
   name: string;
   args: any;
@@ -31,7 +30,7 @@ export type LabCommand = {
 export type Context = {
   cell_id: string;
   content: any;
-}
+};
 
 export type AIWorkflowState = {
   agent: string;
