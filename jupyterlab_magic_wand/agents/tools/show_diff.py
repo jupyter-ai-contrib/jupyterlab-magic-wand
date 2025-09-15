@@ -4,8 +4,8 @@ from typing_extensions import TypedDict
 from nbdime.diffing.generic import diff
 
 
-COMMAND_NAME = "show-diff"
-COMMAND_NAME_TYPE = Literal["show-diff"]
+COMMAND_NAME = "jupyterlab-cell-diff:show-nbdime"
+COMMAND_NAME_TYPE = Literal["jupyterlab-cell-diff:show-nbdime"]
 
 
 class MergeDiff(TypedDict):
