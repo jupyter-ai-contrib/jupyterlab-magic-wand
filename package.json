@@ -7,9 +7,9 @@
         "jupyterlab",
         "jupyterlab-extension"
     ],
-    "homepage": "https://github.com/Zsailer/jupyterlab-magic-wand",
+    "homepage": "https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand",
     "bugs": {
-        "url": "https://github.com/Zsailer/jupyterlab-magic-wand/issues"
+        "url": "https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/issues"
     },
     "license": "BSD-3-Clause",
     "author": {
@@ -27,7 +27,7 @@
     "style": "style/index.css",
     "repository": {
         "type": "git",
-        "url": "https://github.com/Zsailer/jupyterlab-magic-wand.git"
+        "url": "https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand.git"
     },
     "scripts": {
         "build": "jlpm build:lib && jlpm build:labextension:dev",
