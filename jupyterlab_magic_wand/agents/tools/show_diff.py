@@ -1,7 +1,5 @@
-
-from typing import Literal, Optional
+from typing import Literal
 from typing_extensions import TypedDict
-from nbdime.diffing.generic import diff
 
 
 COMMAND_NAME = "jupyterlab-cell-diff:show-nbdime"
@@ -19,18 +17,12 @@ class ShowDiff(TypedDict):
     args: MergeDiff
 
 
-def show_diff(
-    cell_id: str,
-    original_source: str, 
-    new_source: str
-) -> ShowDiff:
-    diff_results = diff(original_source, new_source)
+def show_diff(cell_id: str, original_source: str, new_source: str) -> ShowDiff:
     return {
         "name": COMMAND_NAME,
         "args": {
-            "cell_id": cell_id,
-            "original_source": original_source,
-            "diff": diff_results
-        }   
+            "cellId": cell_id,
+            "originalSource": original_source,
+            "newSource": new_source,
+        },
     }
-    
