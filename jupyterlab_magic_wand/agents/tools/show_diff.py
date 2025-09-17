@@ -2,14 +2,14 @@ from typing import Literal
 from typing_extensions import TypedDict
 
 
-COMMAND_NAME = "jupyterlab-cell-diff:show-nbdime"
-COMMAND_NAME_TYPE = Literal["jupyterlab-cell-diff:show-nbdime"]
+COMMAND_NAME = "jupyterlab-cell-diff:show-codemirror"
+COMMAND_NAME_TYPE = Literal["jupyterlab-cell-diff:show-codemirror"]
 
 
 class MergeDiff(TypedDict):
-    cell_id: str
-    source: str
-    diff: str
+    cellId: str
+    originalSource: str
+    newSource: str
 
 
 class ShowDiff(TypedDict):
