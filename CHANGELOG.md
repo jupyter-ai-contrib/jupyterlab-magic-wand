@@ -2,6 +2,31 @@
 
 <!-- <START NEW CHANGELOG ENTRY> -->
 
+## 0.6.0
+
+([Full Changelog](https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/compare/v0.5.0...f8ce3b1278cbcd671d8ea449cdea3c670cff4701))
+
+### Enhancements made
+
+- Switch to the codemirror command for diffs [#16](https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/pull/16) ([@jtpio](https://github.com/jtpio))
+
+### Bugs fixed
+
+- Fix args for `jupyterlab-cell-diff:show-nbdime` [#14](https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/pull/14) ([@jtpio](https://github.com/jtpio))
+
+### Maintenance and upkeep improvements
+
+- Update repository and homepage URLs in package.json [#15](https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/pull/15) ([@jtpio](https://github.com/jtpio))
+- Update command name to `jupyterlab-cell-diff:show-nbdime` [#13](https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/pull/13) ([@jtpio](https://github.com/jtpio))
+
+### Contributors to this release
+
+([GitHub contributors page for this release](https://github.com/jupyter-ai-contrib/jupyterlab-magic-wand/graphs/contributors?from=2025-03-18&to=2025-09-17&type=c))
+
+[@github-actions](https://github.com/search?q=repo%3Ajupyter-ai-contrib%2Fjupyterlab-magic-wand+involves%3Agithub-actions+updated%3A2025-03-18..2025-09-17&type=Issues) | [@jtpio](https://github.com/search?q=repo%3Ajupyter-ai-contrib%2Fjupyterlab-magic-wand+involves%3Ajtpio+updated%3A2025-03-18..2025-09-17&type=Issues) | [@Zsailer](https://github.com/search?q=repo%3Ajupyter-ai-contrib%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-03-18..2025-09-17&type=Issues)
+
+<!-- <END NEW CHANGELOG ENTRY> -->
+
 ## 0.5.0
 
 ([Full Changelog](https://github.com/Zsailer/jupyterlab-magic-wand/compare/v0.4.1...7fa74ea3fb5423069485e248c0f702d4314a1e61))
@@ -15,8 +40,6 @@
 ([GitHub contributors page for this release](https://github.com/Zsailer/jupyterlab-magic-wand/graphs/contributors?from=2025-02-17&to=2025-03-18&type=c))
 
 [@Zsailer](https://github.com/search?q=repo%3AZsailer%2Fjupyterlab-magic-wand+involves%3AZsailer+updated%3A2025-02-17..2025-03-18&type=Issues)
-
-<!-- <END NEW CHANGELOG ENTRY> -->
 
 ## 0.4.1
 
